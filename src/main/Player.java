@@ -116,90 +116,50 @@ public class Player extends Entity{
 	}
 	public void update() {
 		gp.geteHandler().checkEvent();
-		if(getMana() < getMaxMana()) {
-			healingFrame++;
-			if(healingFrame >= 180) {
-			increaseMana(1);
-			healingFrame = 0;
-			}
-		}
-		if(keyH.isAttackPressed() == true) {
+		if(getMana() < getMaxMana()) manaGradualHealing();
+		if(keyH.isAttackPressed()) {
 			setAttacking(true);
 			attacking();
 			keyH.setAttackPressed(false);
 		}
 		else {
 			if(keyH.isUpPressed() || keyH.isLeftPressed() || keyH.isRightPressed() || keyH.isDownPressed() || keyH.isEnterPressed()) {
-
-			if(keyH.isLeftPressed()) {
-				gp.changePlayThud(true);
-				setDirection("left");
-			}
-			else if(keyH.isRightPressed()) {
-				gp.changePlayThud(true);
-				setDirection("right");
-			}
-			else if(keyH.isUpPressed()) {
-				gp.changePlayThud(true);
-				setDirection("up");
-			}
-			else if(keyH.isDownPressed()) {
-				gp.changePlayThud(true);
-				setDirection("down");
-			}
-			
-			//CHECK TILE COLLISION
-			setCollisionOn(false);
-			gp.getcChecker().checkTile(this);
-			//CHECK OBJECT COLLISION
-			int objIndex = gp.getcChecker().checkObject(this, true);
-			pickupObject(objIndex);
-			//CHECK NPC COLLISION
-			int npcIndex = gp.getcChecker().checkEntity(this, gp.getNpc());
-			interactNPC(npcIndex);
-			
-			//CHECK MONSTER COLLISION
-			//int monsterIndex = gp.getcChecker().checkEntity(this, gp.getMonster());
-			//contactMonster(monsterIndex);
+			changeDirection();
+			checkAllCollisions();
 			
 			//IF COLLISION IS FALSE, PLAYER CAN MOVE
-			if(isCollisionOn() == false && keyH.isEnterPressed() == false) {
-				thud = 0;
-				switch(getDirection()) {
-				case "up": setWorldY(getWorldY() - getSpeed()); break;
-				case "down": setWorldY(getWorldY() + getSpeed()); break;
-				case "left": setWorldX(getWorldX() - getSpeed()); break;
-				case "right": setWorldX(getWorldX() + getSpeed()); break;
-				}
-			}else if(keyH.isEnterPressed() == false) thud = 1;
-			if(isMoving() == false && keyH.isEnterPressed() == false) {
+			if(!isCollisionOn() && !keyH.isEnterPressed()) {
+				moving();
+			}
+			else if(!keyH.isEnterPressed()) thud = 1;
+			
+			//Reset sprite and moving state
+			if(!isMoving() && !keyH.isEnterPressed()) {
 				setSpriteNum(1);
 				setMoving(true);
 			}
+			
 			keyH.setEnterPressed(false);
-		if(getSpriteCounter() > 8) {
-			if(getSpriteNum() == 1 && getReverse() == 0) setSpriteNum(2);
-			else if(getSpriteNum() == 2 && getReverse() == 0) setSpriteNum(3);
-			else if(getSpriteNum() == 3 && getReverse() == 0) {
-				setReverse(1);
-				setSpriteNum(2);
-			}
-			else if(getSpriteNum() == 2 && getReverse() == 1) {
-				setReverse(0);
-				setSpriteNum(1);
-			}
-			setSpriteCounter(0);
-		}
-		setSpriteCounter(getSpriteCounter() + 1);
-	}else {
-		setMoving(false);
-		gp.changePlayThud(false);
-		setSpriteNum(0);
-		setSpriteCounter(4);
-		setReverse(0);
+			updateSprite();
 	}
+	else notMoving();
 }
-		if(gp.getKeyH().isMagicKeyPressed() && getProjectile().isAlive() == false && getShotCooldown() == 80 && getProjectile().haveResources(this)) {
+		firingProjectile();
+		updateInvincibility();
+		if(getShotCooldown() < 80) setShotCooldown(getShotCooldown() + 1);
+}
+	
+	private void updateInvincibility() {
+		if(isInvincible()) {
+			setInvincibleCounter(getInvincibleCounter() + 1);
+			if(getInvincibleCounter() > gp.getFPS() + gp.getFPS() / 5) {
+				setInvincible(false);
+				setInvincibleCounter(0);
+			}
+		}
+	}
+	private void firingProjectile() {
+		if(gp.getKeyH().isMagicKeyPressed() && !getProjectile().isAlive() && getShotCooldown() == 80 && getProjectile().haveResources(this)) {
 			
 			setCasting(true);
 			//Set default coordinates, direction and user
@@ -214,17 +174,86 @@ public class Player extends Entity{
 			
 			gp.playSE(17);
 			}
-		if(isInvincible()) {
-			setInvincibleCounter(getInvincibleCounter() + 1);
-			if(getInvincibleCounter() > gp.getFPS() + gp.getFPS() / 5) {
-				setInvincible(false);
-				setInvincibleCounter(0);
+	}
+	private void notMoving() {
+			setMoving(false);
+			gp.changePlayThud(false);
+			setSpriteNum(0);
+			setSpriteCounter(4);
+			setReverse(0);
+	}
+	private void updateSprite() {
+		if(getSpriteCounter() > 8) {
+			if(getSpriteNum() == 1 && getReverse() == 0) setSpriteNum(2);
+			else if(getSpriteNum() == 2 && getReverse() == 0) setSpriteNum(3);
+			else if(getSpriteNum() == 3 && getReverse() == 0) {
+				setReverse(1);
+				setSpriteNum(2);
 			}
+			else if(getSpriteNum() == 2 && getReverse() == 1) {
+				setReverse(0);
+				setSpriteNum(1);
+			}
+			setSpriteCounter(0);
 		}
-		if(getShotCooldown() < 80) setShotCooldown(getShotCooldown() + 1);
+		setSpriteCounter(getSpriteCounter() + 1);
+	}
+	private void moving() {
+		thud = 0;
+		switch(getDirection()) {
+		case "up": setWorldY(getWorldY() - getSpeed()); break;
+		case "down": setWorldY(getWorldY() + getSpeed()); break;
+		case "left": setWorldX(getWorldX() - getSpeed()); break;
+		case "right": setWorldX(getWorldX() + getSpeed()); break;
+		}
+	}
+	private void checkAllCollisions() {
+		//CHECK TILE COLLISION
+		setCollisionOn(false);
+		gp.getcChecker().checkTile(this);
+		//CHECK OBJECT COLLISION
+		int objIndex = gp.getcChecker().checkObject(this, true);
+		pickupObject(objIndex);
+		//CHECK NPC COLLISION
+		int npcIndex = gp.getcChecker().checkEntity(this, gp.getNpc());
+		interactNPC(npcIndex);
 		
-		
-}
+		//CHECK MONSTER COLLISION
+		int monsterIndex = gp.getcChecker().checkEntity(this, gp.getMonster());
+		contactMonster(monsterIndex);
+	}
+	private void changeDirection() {
+		if(keyH.isLeftPressed()) {
+			gp.changePlayThud(true);
+			setDirection("left");
+		}
+		else if(keyH.isRightPressed()) {
+			gp.changePlayThud(true);
+			setDirection("right");
+		}
+		else if(keyH.isUpPressed()) {
+			gp.changePlayThud(true);
+			setDirection("up");
+		}
+		else if(keyH.isDownPressed()) {
+			gp.changePlayThud(true);
+			setDirection("down");
+		}
+	}
+	private void manaGradualHealing() {
+		healingFrame++;
+		if(healingFrame >= gp.getFPS() * 6) {
+		increaseMana(1);
+		healingFrame = 0;
+		}
+	}
+	
+	public void gainEXP(Entity monster) {
+		setExp(getExp() + monster.getExp());
+		gp.getUi().addMessage("Gained " + monster.getExp() + " Experience Points.");
+		checkLevelUp();
+	}
+	
 	public void attacking() {
 		setSpriteCounter(getSpriteCounter() + 1);
 		spriteAttackNum = 2;
@@ -352,6 +381,7 @@ public class Player extends Entity{
 			increaseLevel(1);
 			setNextLevelExp((int)Math.pow((double)getLevel(), (double)3) * 5 / 4);
 			increaseLife(2);
+			increaseMaxLife(2);
 			increaseStrength(1);
 			increaseDexterity(1);
 			setAttack(getPlayerAttack());

@@ -22,12 +22,27 @@ public class Projectile extends Entity{
 		//Unused, only for inheritance
 	}
 	public void update() {
+		move();
+		updateSprite();
+		if(user == gp.getPlayer()) playerAttack();
+		else enemyAttack();
+		startDespawning();
+	}
+	
+	private void startDespawning() {
+		decreaseLife(1);
+		if(getLife() <= 0) setAlive(false);
+	}
+	private void move() {
 		switch(getDirection()) {
 		case "up": setWorldY(getWorldY() - getSpeed()); break;
 		case "down": setWorldY(getWorldY() + getSpeed()); break;
 		case "left": setWorldX(getWorldX() - getSpeed()); break;
 		case "right": setWorldX(getWorldX() + getSpeed()); break;
 		}
+	}
+	
+	private void updateSprite() {
 		setSpriteCounter(getSpriteCounter() + 1);
 		if(getSpriteCounter() > 12) {
 			if(getSpriteNum() == 0) setSpriteNum(1);
@@ -36,22 +51,22 @@ public class Projectile extends Entity{
 			else setSpriteNum(0);
 			setSpriteCounter(0);
 		}
-		if(user == gp.getPlayer()) {
-			int monsterIndex = gp.getcChecker().checkEntity(this, gp.getMonster());
-			if(monsterIndex != 999) {
-				gp.getPlayer().damageMonster(monsterIndex);
-				setAlive(false);
-			}
-		}else {
-			//Enemies' projecttiles
-			boolean contactPlayer = gp.getcChecker().checkPlayer(this);
-			if(!gp.getPlayer().isInvincible() && contactPlayer) {
-				damagePlayer(getAttack());
-				setAlive(false);
-			}
+	}
+	
+	private void playerAttack() {
+		int monsterIndex = gp.getcChecker().checkEntity(this, gp.getMonster());
+		if(monsterIndex != 999) {
+			gp.getPlayer().damageMonster(monsterIndex);
+			setAlive(false);
 		}
-		decreaseLife(1);
-		if(getLife() <= 0) setAlive(false);
+	}
+	
+	private void enemyAttack() {
+		boolean contactPlayer = gp.getcChecker().checkPlayer(this);
+		if(!gp.getPlayer().isInvincible() && contactPlayer) {
+			damagePlayer(getAttack());
+			setAlive(false);
+		}
 	}
 	public Entity getUser() {
 		return user;

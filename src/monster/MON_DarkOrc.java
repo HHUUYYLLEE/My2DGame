@@ -4,6 +4,7 @@ import java.util.Random;
 
 import main.Entity;
 import main.GamePanel;
+import object.OBJ_Coin;
 import object.OBJ_Rock;
 
 public class MON_DarkOrc extends Entity{
@@ -80,5 +81,8 @@ public class MON_DarkOrc extends Entity{
 			setShotCooldown(0);
 		}
 	}
-	
+	public void checkDrop() {
+		int i = new Random().nextInt(100) + 1;
+		if(i < 50) dropItem(new OBJ_Coin(gp));
+	}
 }

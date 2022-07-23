@@ -29,7 +29,8 @@ public class UI {
 	private String currentDialogue = "";
 	private int commandNum = 0;
 	private int titleScreenState = 0;
-	
+	private int maxOptions;
+	private int subOptionState;
 	//Inventory variables
 	private int slotCol = 0;
 	private int slotRow = 0;
@@ -86,11 +87,7 @@ public class UI {
 		}
 		
 		//PAUSE STATE
-		if(gp.getGameState() == gp.pauseState) {
-			drawPlayerLifeandMana();
-			drawEXPBar();
-			drawPauseScreen();
-		}
+		if(gp.getGameState() == gp.pauseState) drawPauseScreen();
 		
 		//DIALOGUE STATE
 		if(gp.getGameState() == gp.dialogueState) {
@@ -279,12 +276,79 @@ public class UI {
 }
 	public void drawPauseScreen() {
 		
-		String text = "Game paused.";
-		g2.setFont(g2.getFont().deriveFont(42F));
-		int x = getXforCenteredText(text);
-		int y = gp.getScreenHeight() / 2;
-		g2.drawString(text, x, y);
+		g2.setColor(Color.white);
+		g2.setFont(g2.getFont().deriveFont(32F));
 		
+		int frameX = gp.getTileSize() * 6;
+		int frameY = gp.getTileSize();
+		int frameWidth = gp.getTileSize() * 10;
+		int frameHeight = gp.getTileSize() * 10;
+		drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+		switch(subOptionState) {
+		case 0: options_top(frameX, frameY);break;
+		}
+		
+	}
+	public void options_top(int frameX, int frameY) {
+		int textX, textY;
+		
+		//title
+		String text = "Options";
+		textX = getXforCenteredText(text);
+		textY = frameY + gp.getTileSize();
+		g2.drawString(text, textX, textY);
+		
+		textX = frameX + gp.getTileSize();
+		
+		//music
+		textY += gp.getTileSize() * 2;
+		g2.drawString("Music", textX, textY);
+		if(commandNum == 0) {
+			g2.setColor(Color.cyan);
+			g2.drawString("Music", textX, textY);
+			g2.setColor(Color.white);
+		}
+		//sound effect
+		textY += gp.getTileSize();
+		g2.drawString("Sound effects", textX, textY);
+		if(commandNum == 1) {
+			g2.setColor(Color.cyan);
+			g2.drawString("Sound effects", textX, textY);
+			g2.setColor(Color.white);
+		}
+		//quit to menu
+		textY += gp.getTileSize();
+		g2.drawString("Quit to main menu", textX, textY);
+		if(commandNum == 2) {
+			g2.setColor(Color.cyan);
+			g2.drawString("Quit to main menu", textX, textY);
+			g2.setColor(Color.white);
+		}
+		//go back
+		textY += gp.getTileSize() * 2;
+		g2.drawString("Continue", textX, textY);
+		if(commandNum == 3) {
+			g2.setColor(Color.cyan);
+			g2.drawString("Continue", textX, textY);
+			g2.setColor(Color.white);
+		}
+		
+		
+		//Right side
+		g2.setStroke(new BasicStroke(3));
+		textX = gp.getTileSize() * 5 + frameX;
+		textY = frameY + gp.getTileSize() * 2 + 24;
+		
+		//Music
+		g2.drawRect(textX, textY, 180, 24);
+		int volumeWidth = 36 * gp.getMusic().getVolumeScale();
+		g2.fillRect(textX, textY, volumeWidth, 24);
+		
+		//Sound effects
+		textY += gp.getTileSize();
+		g2.drawRect(textX, textY, 180, 24);
+		volumeWidth = 36 * gp.getSe().getVolumeScale();
+		g2.fillRect(textX, textY, volumeWidth, 24);
 	}
 	public void drawDialogueScreen() {
 		//WINDOW
@@ -539,6 +603,18 @@ public class UI {
 	}
 	public int getSlotsInAColumn() {
 		return slotsInAColumn;
+	}
+	public int getMaxOptions() {
+		return maxOptions;
+	}
+	public void setMaxOptions(int maxOptions) {
+		this.maxOptions = maxOptions;
+	}
+	public int getSubOptionState() {
+		return subOptionState;
+	}
+	public void setSubOptionState(int subOptionState) {
+		this.subOptionState = subOptionState;
 	}
 
 }

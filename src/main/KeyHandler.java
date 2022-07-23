@@ -33,25 +33,26 @@ public class KeyHandler implements KeyListener{
 		else if(gp.getGameState() == gp.characterState) characterState(code);
 	}
 	public void titleState(int code) {
+		gp.getUi().setMaxOptions(4);
 		if(gp.getUi().getTitleScreenState() == 0) {
 			if(code == KeyEvent.VK_UP) {
 				gp.getUi().setCommandNum(gp.getUi().getCommandNum() - 1);
-				if(gp.getUi().getCommandNum() < 0) gp.getUi().setCommandNum(3);
+				if(gp.getUi().getCommandNum() < 0) gp.getUi().setCommandNum(gp.getUi().getMaxOptions() - 1);
 			}
 			if(code == KeyEvent.VK_DOWN) {
 				gp.getUi().setCommandNum(gp.getUi().getCommandNum() + 1);
-				if(gp.getUi().getCommandNum() > 3) gp.getUi().setCommandNum(0);
+				if(gp.getUi().getCommandNum() > gp.getUi().getMaxOptions() - 1) gp.getUi().setCommandNum(0);
 			}
 			if(code == KeyEvent.VK_ENTER) {
 				if(gp.getUi().getCommandNum() == 0) {
-					//gp.playMusic(0);
+					gp.playMusic(0);
 					gp.setGameState(gp.playState);
 				}
 				if(gp.getUi().getCommandNum() == 1) {
 					
 				}
 				if(gp.getUi().getCommandNum() == 2) gp.getUi().setTitleScreenState(2);
-				if(gp.getUi().getCommandNum() == 3) System.exit(0);
+				if(gp.getUi().getCommandNum() == gp.getUi().getMaxOptions() - 1) System.exit(0);
 			}
 		}else if(gp.getUi().getTitleScreenState() == 2 && code == KeyEvent.VK_ENTER) gp.getUi().setTitleScreenState(0);
 	}
@@ -71,11 +72,67 @@ public class KeyHandler implements KeyListener{
 		//if(code == KeyEvent.VK_R) gp.tileM.loadMap("/maps/worldV2.txt");
 	}
 	public void pauseState(int code) {
+		
 		gp.changePlayThud(false);
 		if(code == KeyEvent.VK_P) {
 			gp.setGameState(gp.playState);
 			gp.changePlayThud(true);
-		
+		}
+		switch(gp.getUi().getSubOptionState()) {
+		case 0: gp.getUi().setMaxOptions(4); break;
+		}
+		if(code == KeyEvent.VK_UP) {
+			gp.getUi().setCommandNum(gp.getUi().getCommandNum() - 1);
+			if(gp.getUi().getCommandNum() < 0) gp.getUi().setCommandNum(gp.getUi().getMaxOptions() - 1);
+			gp.playSE(13);
+		}
+		if(code == KeyEvent.VK_DOWN) {
+			gp.getUi().setCommandNum(gp.getUi().getCommandNum() + 1);
+			if(gp.getUi().getCommandNum() > gp.getUi().getMaxOptions() - 1) gp.getUi().setCommandNum(0);
+			gp.playSE(13);
+		}
+		if(code == KeyEvent.VK_ENTER) {
+			if(gp.getUi().getCommandNum() == 2) gp.gameEnd();
+			if(gp.getUi().getCommandNum() == 3) gp.setGameState(gp.playState);
+		}
+		if(code == KeyEvent.VK_LEFT) {
+			if(gp.getUi().getSubOptionState() == 0) {
+				if(gp.getUi().getCommandNum() == 0){
+					if(gp.getMusic().getVolumeScale() > 0) {
+					gp.getMusic().decreaseVolumeScale(1);
+					gp.getMusic().checkVolume();
+					gp.playSE(13);
+				}
+				else gp.playSE(14);
+				}
+				else if(gp.getUi().getCommandNum() == 1) {
+					if(gp.getSe().getVolumeScale() > 0) {
+					gp.getSe().decreaseVolumeScale(1);
+					gp.playSE(13);
+				}
+				else gp.playSE(14);
+			}else gp.playSE(14);
+		}
+	}
+		if(code == KeyEvent.VK_RIGHT) {
+			if(gp.getUi().getSubOptionState() == 0) {
+				if(gp.getUi().getCommandNum() == 0) {
+					if(gp.getMusic().getVolumeScale() < 5) {
+					gp.getMusic().increaseVolumeScale(1);
+					gp.getMusic().checkVolume();
+					gp.playSE(13);
+				}
+				else gp.playSE(14);
+			}
+				else if(gp.getUi().getCommandNum() == 1) {
+					if(gp.getSe().getVolumeScale() < 5) {
+					gp.getSe().increaseVolumeScale(1);
+					gp.playSE(13);
+				}
+				else gp.playSE(14);
+				}
+				else gp.playSE(14);
+			}
 		}
 	}
 	public void dialogueState(int code) {

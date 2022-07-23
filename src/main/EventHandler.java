@@ -13,41 +13,41 @@ public class EventHandler {
 		this.gp = gp;
 		eventRect = new EventRect[gp.getMaxWorldCol()][gp.getMaxWorldRow()];
 		
-		int col = 0;
-		int row = 0;
-		while(col < gp.getMaxWorldCol() && row < gp.getMaxWorldRow()) {
+		updateAllDamageTiles();
 		
-		eventRect[col][row] = new EventRect();
-		eventRect[col][row].x = 8; //Place to trigger event;
-		eventRect[col][row].y = 8;
-		eventRect[col][row].width = 23;
-		eventRect[col][row].height = 23;
-		eventRect[col][row].eventRectDefaultX = eventRect[col][row].x;
-		eventRect[col][row].eventRectDefaultY = eventRect[col][row].y;
-		if(gp.getTileM().getTile()[gp.getTileM().getMapTileNum()[col][row]].isDamageTile() == true) {
-			spikeTile.add(spikeTileTotal, new ArrayList<>(Arrays.asList(col, row)));
-			spikeTileTotal++;
-		}
-		col++;
-		if(col == gp.getMaxWorldCol()) {
-			col = 0;
-			row++;
-		}
-		
+	}
+private void updateAllDamageTiles() {
+	int col = 0;
+	int row = 0;
+	while(col < gp.getMaxWorldCol() && row < gp.getMaxWorldRow()) {
+	
+	eventRect[col][row] = new EventRect();
+	eventRect[col][row].x = 8; //Place to trigger event;
+	eventRect[col][row].y = 8;
+	eventRect[col][row].width = 23;
+	eventRect[col][row].height = 23;
+	eventRect[col][row].setEventRectDefaultX(eventRect[col][row].x);
+	eventRect[col][row].setEventRectDefaultY(eventRect[col][row].y);
+	
+	if(gp.getTileM().getTile()[gp.getTileM().getMapTileNum()[col][row]].isDamageTile()) {
+		spikeTile.add(spikeTileTotal, new ArrayList<>(Arrays.asList(col, row)));
+		spikeTileTotal++;
+	}
+	
+	col++;
+	if(col == gp.getMaxWorldCol()) {
+		col = 0;
+		row++;
+	}
 	}
 }
 	public void checkEvent() {
-		//Check if player is more than 1 tile away from last event
-		int xDistance = Math.abs(gp.getPlayer().getWorldX() - previousEventX);
-		int yDistance = Math.abs(gp.getPlayer().getWorldY() - previousEventY);
-		int distance = Math.max(xDistance, yDistance);
+		canTouchEventOrNot();
+		allEvents();
+	}
+	private void allEvents() {
 		int i;
-		if(distance > gp.getTileSize()) canTouchEvent = true;
-		
-		
 		if(canTouchEvent == true) {
-			
-			
 		for(i = 0;i < spikeTileTotal; ++i)
 			if(hit(spikeTile.get(i).get(0), spikeTile.get(i).get(1), "any") == true) 
 				damageSpike(spikeTile.get(i).get(0), spikeTile.get(i).get(1), gp.playState);
@@ -55,7 +55,13 @@ public class EventHandler {
 		
 		if(hit(23,12,"up") == true) healingPool(23, 12, gp.dialogueState);
 		}
-			
+	}
+	private void canTouchEventOrNot() {
+		//Check if player is more than 1 tile away from last event
+				int xDistance = Math.abs(gp.getPlayer().getWorldX() - previousEventX);
+				int yDistance = Math.abs(gp.getPlayer().getWorldY() - previousEventY);
+				int distance = Math.max(xDistance, yDistance);
+				if(distance > gp.getTileSize()) canTouchEvent = true;
 	}
 	public boolean hit(int col, int row, String reqDirection) {
 		 boolean hit = false;
@@ -65,7 +71,7 @@ public class EventHandler {
 		 eventRect[col][row].x += col * gp.getTileSize();
 		 eventRect[col][row].y += row * gp.getTileSize();
 		 //if collides with event tiles
-		 if(gp.getPlayer().getSolidArea().intersects(eventRect[col][row]) && eventRect[col][row].eventDone == false) {
+		 if(gp.getPlayer().getSolidArea().intersects(eventRect[col][row]) && !eventRect[col][row].isEventDone()) {
 			 if(gp.getPlayer().getDirection().contentEquals(reqDirection) || reqDirection.contentEquals("any")) {
 				 hit = true;
 				 
@@ -76,10 +82,8 @@ public class EventHandler {
 		 // Undo all changed values
 		 gp.getPlayer().getSolidArea().x = gp.getPlayer().getSolidAreaDefaultX();
 		 gp.getPlayer().getSolidArea().y = gp.getPlayer().getSolidAreaDefaultY();
-		 eventRect[col][row].x = eventRect[col][row].eventRectDefaultX;
-		 eventRect[col][row].y = eventRect[col][row].eventRectDefaultY;
-		 
-		 
+		 eventRect[col][row].x = eventRect[col][row].getEventRectDefaultX();
+		 eventRect[col][row].y = eventRect[col][row].getEventRectDefaultY();
 		 return hit;
 	}
 	public void teleport(int gameState) {

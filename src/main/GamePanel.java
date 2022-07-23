@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
 	private UI ui = new UI(this);
 	private EventHandler eHandler = new EventHandler(this);
 	private Player player = new Player(this, keyH);
-	private Entity obj[] = new Entity[10];
+	private Entity obj[] = new Entity[20];
 	private Entity npc[] = new Entity[10];
 	private Entity monster[] = new Entity[20];
 	private ArrayList<Entity> projectileList = new ArrayList<>();
@@ -194,17 +194,7 @@ public class GamePanel extends JPanel implements Runnable{
 		if(gameState == playState) {
 			if(player.getLife() <= 0) {
 				//game over
-				gameState = titleState;
-				stopMusic();
-				player.setCurrentWeapon(null);
-				player.setCurrentShield(null);
-				player.setDefaultValues();
-				player.getPlayerAttackImage();
-				player.setItems();
-				player.setInvincible(false);
-				aSetter.setNPC();
-				aSetter.setMonster();
-				aSetter.setObject();
+				gameEnd();
 			}
 		//PLAYER
 			player.update();
@@ -226,11 +216,11 @@ public class GamePanel extends JPanel implements Runnable{
 					}
 					if(monster[i].isAlive() && !monster[i].isDead()) monster[i].update();
 				if(!monster[i].isAlive()) {
-					player.setExp(player.getExp() + monster[i].getExp());
-					ui.addMessage("Gained " + monster[i].getExp() + " Experience Points.");
-					monster[i] = null;
+					monster[i].checkDrop();
 					spawnCooldown = 0;
-					player.checkLevelUp();
+					player.gainEXP(monster[i]);
+					monster[i] = null;
+					
 				}
 			}
 		}
@@ -245,10 +235,24 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 			
 		}
-		if(gameState == pauseState) {
-			
-		}
 	}
+	public void gameEnd() {
+		gameState = titleState;
+		stopMusic();
+		player.setCurrentWeapon(null);
+		player.setCurrentShield(null);
+		player.setDefaultValues();
+		player.getPlayerAttackImage();
+		player.setItems();
+		player.setInvincible(false);
+		aSetter.setNPC();
+		aSetter.setMonster();
+		aSetter.setObject();
+	}
+
+
+
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
@@ -411,6 +415,15 @@ public class GamePanel extends JPanel implements Runnable{
 	public KeyHandler getKeyH() {
 		return keyH;
 	}
+
+	public Sound getMusic() {
+		return music;
+	}
+
+	public Sound getSe() {
+		return se;
+	}
+
 
 
 

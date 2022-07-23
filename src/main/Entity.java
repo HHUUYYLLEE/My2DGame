@@ -158,6 +158,19 @@ public class Entity {
 		moving = true;
 		
 	}
+	public void checkDrop() {
+		
+	}
+	public void dropItem(Entity droppedItem) {
+		for(int i = 0; i < gp.getObj().length; ++i) {
+			if(gp.getObj()[i] == null) {
+				gp.getObj()[i] = droppedItem;
+				gp.getObj()[i].setWorldX(getWorldX());
+				gp.getObj()[i].setWorldY(getWorldY());
+				break;
+			}
+		}
+	}
 	public void speak() {
 		if(dialogues[dialogueIndex] == null) {
 			dialogueIndex = 0;
@@ -174,24 +187,28 @@ public class Entity {
 	}
 	public void update() {
 		setAction();
-		collisionOn = false;
-		gp.getcChecker().checkTile(this);
-		gp.getcChecker().checkObject(this, false);
-		gp.getcChecker().checkEntity(this, gp.getNpc());
-		gp.getcChecker().checkEntity(this, gp.getMonster());
-		boolean contactPlayer = gp.getcChecker().checkPlayer(this);
-		
-		if(this.category == type_monster && contactPlayer && !gp.getPlayer().isInvincible()) damagePlayer(attack);
+		checkAllCollisions();
 		
 		//IF COLLISION IS FALSE, NPCS AND MONSTERS CAN MOVE
-		if(collisionOn == false && moving) {
-			switch(getDirection()) {
-			case "up": worldY -= speed; break;
-			case "down": worldY += speed; break;
-			case "left": worldX -= speed; break;
-			case "right": worldX += speed; break;
+		if(!collisionOn && moving) move();
+		else moving = false;
+		
+		updateSprite();
+		
+		updateInvincibility();
+		if(shotCooldown < 80) shotCooldown++;
+	}
+	
+	private void updateInvincibility() {
+		if(invincible) {
+			invincibleCounter++;
+			if(invincibleCounter > gp.getFPS() + gp.getFPS() / 5) {
+				invincible = false;
+				invincibleCounter = 0;
 			}
-		}else moving = false;
+		}
+	}
+	private void updateSprite() {
 		if(spriteCounter > 8 && moving) {
 			if(spriteNum == 0 || (spriteNum == 1 && reverse == 0)) spriteNum = 2;
 			else if(spriteNum == 2 && reverse == 0) spriteNum = 3;
@@ -205,16 +222,25 @@ public class Entity {
 			}
 			spriteCounter = 0;
 		} else if(!moving) spriteNum = 0;
-		
 		spriteCounter++;
-		if(invincible) {
-			invincibleCounter++;
-			if(invincibleCounter > gp.getFPS() + gp.getFPS() / 5) {
-				invincible = false;
-				invincibleCounter = 0;
-			}
+	}
+	private void move() {
+		switch(direction) {
+		case "up": worldY -= speed; break;
+		case "down": worldY += speed; break;
+		case "left": worldX -= speed; break;
+		case "right": worldX += speed; break;
 		}
-		if(shotCooldown < 80) shotCooldown++;
+	}
+	private void checkAllCollisions() {
+		collisionOn = false;
+		gp.getcChecker().checkTile(this);
+		gp.getcChecker().checkObject(this, false);
+		gp.getcChecker().checkEntity(this, gp.getNpc());
+		gp.getcChecker().checkEntity(this, gp.getMonster());
+		boolean contactPlayer = gp.getcChecker().checkPlayer(this);
+		
+		if(this.category == type_monster && contactPlayer && !gp.getPlayer().isInvincible()) damagePlayer(attack);
 	}
 	public void damagePlayer(int attack) {
 		int damage = attack - gp.getPlayer().getDefense();
@@ -813,6 +839,9 @@ public class Entity {
 	}
 	public void setMaxLife(int maxLife) {
 		this.maxLife = maxLife;
+	}
+	public void increaseMaxLife(int count) {
+		this.maxLife += count;
 	}
 	public int getLife() {
 		return life;
