@@ -1,6 +1,8 @@
-package main;
+package event;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import main.GamePanel;
 
 public class EventHandler {
 	private GamePanel gp;

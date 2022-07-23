@@ -1,6 +1,6 @@
-package npc;
+package entity.npc;
 
-import main.Entity;
+import entity.Entity;
 import main.GamePanel;
 
 public class NPC_RedMage extends Entity{

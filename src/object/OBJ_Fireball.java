@@ -3,9 +3,9 @@ package object;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import main.Entity;
+import entity.Entity;
+import entity.Projectile;
 import main.GamePanel;
-import main.Projectile;
 
 public class OBJ_Fireball extends Projectile{
 	GamePanel gp;

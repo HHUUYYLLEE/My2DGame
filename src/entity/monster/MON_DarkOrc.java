@@ -1,8 +1,8 @@
-package monster;
+package entity.monster;
 
 import java.util.Random;
 
-import main.Entity;
+import entity.Entity;
 import main.GamePanel;
 import object.OBJ_Coin;
 import object.OBJ_Rock;

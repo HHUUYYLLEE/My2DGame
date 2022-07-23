@@ -1,4 +1,4 @@
-package main;
+package entity;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+
+import main.GamePanel;
+import main.UtilityTool;
 
 public class Entity {
 	GamePanel gp;

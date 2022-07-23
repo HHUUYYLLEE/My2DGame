@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import entity.Entity;
 import object.OBJ_Heart;
 import object.OBJ_ManaCrystal;
 

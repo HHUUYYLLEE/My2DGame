@@ -1,4 +1,4 @@
-package main;
+package entity;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -8,6 +8,8 @@ import java.util.ArrayList;
 //import java.sql.Connection;
 import java.util.Random;
 
+import main.GamePanel;
+import main.KeyHandler;
 import object.OBJ_Fireball;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;

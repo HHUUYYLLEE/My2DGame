@@ -2,8 +2,8 @@ package main;
 
 import java.util.Random;
 
-import monster.MON_DarkOrc;
-import npc.NPC_RedMage;
+import entity.monster.MON_DarkOrc;
+import entity.npc.NPC_RedMage;
 import object.OBJ_Coin;
 import object.OBJ_Potion_Blue;
 import object.OBJ_Potion_Red;

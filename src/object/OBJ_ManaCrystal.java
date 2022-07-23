@@ -1,6 +1,6 @@
 package object;
 
-import main.Entity;
+import entity.Entity;
 import main.GamePanel;
 
 public class OBJ_ManaCrystal extends Entity{

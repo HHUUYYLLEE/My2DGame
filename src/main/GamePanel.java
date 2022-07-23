@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import javax.swing.JPanel;
 
+import entity.Entity;
+import entity.Player;
+import event.EventHandler;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{

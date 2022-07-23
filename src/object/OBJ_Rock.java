@@ -1,8 +1,8 @@
 package object;
 
-import main.Entity;
+import entity.Entity;
+import entity.Projectile;
 import main.GamePanel;
-import main.Projectile;
 
 public class OBJ_Rock extends Projectile{
 	private GamePanel gp;

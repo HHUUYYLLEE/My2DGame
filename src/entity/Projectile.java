@@ -1,4 +1,6 @@
-package main;
+package entity;
+
+import main.GamePanel;
 
 public class Projectile extends Entity{
 	private Entity user;
