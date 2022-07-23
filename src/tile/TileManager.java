@@ -13,12 +13,12 @@ import main.UtilityTool;
 
 public class TileManager {
 	GamePanel gp;
-	public Tile[] tile;
-	public int mapTileNum[][];
+	private Tile[] tile;
+	private int mapTileNum[][];
 	public TileManager(GamePanel gp, String mapFile) {
 		this.gp = gp;
 		tile = new Tile[50];
-		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+		mapTileNum = new int[gp.getMaxWorldCol()][gp.getMaxWorldRow()];
 		getTileImage();
 		loadMap(mapFile);
 		
@@ -75,10 +75,10 @@ public class TileManager {
 		UtilityTool uTool = new UtilityTool();
 		try {
 			tile[index] = new Tile();
-			tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/" + imageName + ".png"));
-			tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
-			tile[index].collision = collision;
-			tile[index].damageTile = damageTile;
+			tile[index].setImage(ImageIO.read(getClass().getResourceAsStream("/tiles/" + imageName + ".png")));
+			tile[index].setImage(uTool.scaleImage(tile[index].getImage(), gp.getTileSize(), gp.getTileSize()));
+			tile[index].setCollision(collision);
+			tile[index].setDamageTile(damageTile);
 			
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -92,18 +92,18 @@ public class TileManager {
 			int col = 0;
 			int row = 0;
 			
-			while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
+			while(col < gp.getMaxWorldCol() && row < gp.getMaxWorldRow()) {
 				
 				String line = br.readLine();
 				
-				while(col < gp.maxWorldCol) {
+				while(col < gp.getMaxWorldCol()) {
 					
 					String numbers[] = line.split(" ");
 					int num = Integer.parseInt(numbers[col]);
 					mapTileNum[col][row] = num;
 					col++;
 				}
-				if (col == gp.maxWorldCol) {
+				if (col == gp.getMaxWorldCol()) {
 					col = 0;
 					row++;
 				}
@@ -120,42 +120,54 @@ public class TileManager {
 		int worldRow = 0;
 		
 		
-		while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
+		while(worldCol < gp.getMaxWorldCol() && worldRow < gp.getMaxWorldRow()) {
 			int tileNum = mapTileNum[worldCol][worldRow];
 			
-			int worldX = worldCol * gp.tileSize;
-			int worldY = worldRow * gp.tileSize;
-			int screenX = worldX - gp.player.worldX + gp.player.screenX;
-			int screenY = worldY - gp.player.worldY + gp.player.screenY;
+			int worldX = worldCol * gp.getTileSize();
+			int worldY = worldRow * gp.getTileSize();
+			int screenX = worldX - gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX();
+			int screenY = worldY - gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY();
 			
 			//Stop moving camera at edge
-			if(gp.player.screenX > gp.player.worldX) screenX = worldX;
-			if(gp.player.screenY > gp.player.worldY) screenY = worldY;
+			if(gp.getPlayer().getScreenX() > gp.getPlayer().getWorldX()) screenX = worldX;
+			if(gp.getPlayer().getScreenY() > gp.getPlayer().getWorldY()) screenY = worldY;
 			
-			int rightOffset = gp.screenWidth - gp.player.screenX;
-			if(rightOffset > gp.worldWidth - gp.player.worldX) screenX = gp.screenWidth - (gp.worldWidth - worldX);
+			int rightOffset = gp.getScreenWidth() - gp.getPlayer().getScreenX();
+			if(rightOffset > gp.getWorldWidth() - gp.getPlayer().getWorldX()) screenX = gp.getScreenWidth() - (gp.getWorldWidth() - worldX);
 			
-			int bottomOffset = gp.screenHeight - gp.player.screenY;
-			if(bottomOffset > gp.worldHeight - gp.player.worldY) screenY = gp.screenHeight - (gp.worldHeight - worldY);
+			int bottomOffset = gp.getScreenHeight() - gp.getPlayer().getScreenY();
+			if(bottomOffset > gp.getWorldHeight() - gp.getPlayer().getWorldY()) screenY = gp.getScreenHeight() - (gp.getWorldHeight() - worldY);
 			
 			
 			//Draw tiles when player is at the map's edge
-			if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-			   worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-			   worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-			   worldY - gp.tileSize < gp.player.worldY + gp.player.screenY){
-			g2.drawImage(tile[tileNum].image, screenX, screenY, null);
-		}else if(gp.player.screenX > gp.player.worldX ||
-				 gp.player.screenY > gp.player.worldY ||
-				 rightOffset > gp.worldWidth - gp.player.worldX||
-				 bottomOffset > gp.worldHeight - gp.player.worldY) g2.drawImage(tile[tileNum].image, screenX, screenY, null);
+			if(worldX + gp.getTileSize() > gp.getPlayer().getWorldX() - gp.getPlayer().getScreenX() &&
+			   worldX - gp.getTileSize() < gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX() &&
+			   worldY + gp.getTileSize() > gp.getPlayer().getWorldY() - gp.getPlayer().getScreenY() &&
+			   worldY - gp.getTileSize() < gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY()){
+			g2.drawImage(tile[tileNum].getImage(), screenX, screenY, null);
+		}else if(gp.getPlayer().getScreenX() > gp.getPlayer().getWorldX() ||
+				 gp.getPlayer().getScreenY() > gp.getPlayer().getWorldY() ||
+				 rightOffset > gp.getWorldWidth() - gp.getPlayer().getWorldX()||
+				 bottomOffset > gp.getWorldHeight() - gp.getPlayer().getWorldY()) g2.drawImage(tile[tileNum].getImage(), screenX, screenY, null);
 			
 			worldCol++;
-			if(worldCol == gp.maxWorldCol) {
+			if(worldCol == gp.getMaxWorldCol()) {
 				worldCol = 0;
 				worldRow++;
 			}
 		}
 		
+	}
+	public Tile[] getTile() {
+		return tile;
+	}
+	public void setTile(Tile[] tile) {
+		this.tile = tile;
+	}
+	public int[][] getMapTileNum() {
+		return mapTileNum;
+	}
+	public void setMapTileNum(int[][] mapTileNum) {
+		this.mapTileNum = mapTileNum;
 	}
 }

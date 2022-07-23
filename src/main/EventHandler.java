@@ -3,19 +3,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class EventHandler {
-	GamePanel gp;
-	EventRect eventRect[][];
-	int previousEventX, previousEventY, spikeTileTotal = 0;
-	boolean canTouchEvent = true;
-	ArrayList<ArrayList<Integer>> spikeTile = new ArrayList<ArrayList<Integer>>();
+	private GamePanel gp;
+	private EventRect eventRect[][];
+	private int previousEventX, previousEventY, spikeTileTotal = 0;
+	private boolean canTouchEvent = true;
+	private ArrayList<ArrayList<Integer>> spikeTile = new ArrayList<ArrayList<Integer>>();
 	
 	public EventHandler(GamePanel gp) {
 		this.gp = gp;
-		eventRect = new EventRect[gp.maxWorldCol][gp.maxWorldRow];
+		eventRect = new EventRect[gp.getMaxWorldCol()][gp.getMaxWorldRow()];
 		
 		int col = 0;
 		int row = 0;
-		while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
+		while(col < gp.getMaxWorldCol() && row < gp.getMaxWorldRow()) {
 		
 		eventRect[col][row] = new EventRect();
 		eventRect[col][row].x = 8; //Place to trigger event;
@@ -24,12 +24,12 @@ public class EventHandler {
 		eventRect[col][row].height = 23;
 		eventRect[col][row].eventRectDefaultX = eventRect[col][row].x;
 		eventRect[col][row].eventRectDefaultY = eventRect[col][row].y;
-		if(gp.tileM.tile[gp.tileM.mapTileNum[col][row]].damageTile == true) {
+		if(gp.getTileM().getTile()[gp.getTileM().getMapTileNum()[col][row]].isDamageTile() == true) {
 			spikeTile.add(spikeTileTotal, new ArrayList<>(Arrays.asList(col, row)));
 			spikeTileTotal++;
 		}
 		col++;
-		if(col == gp.maxWorldCol) {
+		if(col == gp.getMaxWorldCol()) {
 			col = 0;
 			row++;
 		}
@@ -38,11 +38,11 @@ public class EventHandler {
 }
 	public void checkEvent() {
 		//Check if player is more than 1 tile away from last event
-		int xDistance = Math.abs(gp.player.worldX - previousEventX);
-		int yDistance = Math.abs(gp.player.worldY - previousEventY);
+		int xDistance = Math.abs(gp.getPlayer().getWorldX() - previousEventX);
+		int yDistance = Math.abs(gp.getPlayer().getWorldY() - previousEventY);
 		int distance = Math.max(xDistance, yDistance);
 		int i;
-		if(distance > gp.tileSize) canTouchEvent = true;
+		if(distance > gp.getTileSize()) canTouchEvent = true;
 		
 		
 		if(canTouchEvent == true) {
@@ -60,22 +60,22 @@ public class EventHandler {
 	public boolean hit(int col, int row, String reqDirection) {
 		 boolean hit = false;
 		 
-		 gp.player.solidArea.x += gp.player.worldX;
-		 gp.player.solidArea.y += gp.player.worldY;
-		 eventRect[col][row].x += col * gp.tileSize;
-		 eventRect[col][row].y += row * gp.tileSize;
+		 gp.getPlayer().getSolidArea().x += gp.getPlayer().getWorldX();
+		 gp.getPlayer().getSolidArea().y += gp.getPlayer().getWorldY();
+		 eventRect[col][row].x += col * gp.getTileSize();
+		 eventRect[col][row].y += row * gp.getTileSize();
 		 //if collides with event tiles
-		 if(gp.player.solidArea.intersects(eventRect[col][row]) && eventRect[col][row].eventDone == false) {
-			 if(gp.player.direction.contentEquals(reqDirection) || reqDirection.contentEquals("any")) {
+		 if(gp.getPlayer().getSolidArea().intersects(eventRect[col][row]) && eventRect[col][row].eventDone == false) {
+			 if(gp.getPlayer().getDirection().contentEquals(reqDirection) || reqDirection.contentEquals("any")) {
 				 hit = true;
 				 
-				 previousEventX = gp.player.worldX;
-				 previousEventY = gp.player.worldY;
+				 previousEventX = gp.getPlayer().getWorldX();
+				 previousEventY = gp.getPlayer().getWorldY();
 			 }
 		 }
 		 // Undo all changed values
-		 gp.player.solidArea.x = gp.player.solidAreaDefaultX;
-		 gp.player.solidArea.y = gp.player.solidAreaDefaultY;
+		 gp.getPlayer().getSolidArea().x = gp.getPlayer().getSolidAreaDefaultX();
+		 gp.getPlayer().getSolidArea().y = gp.getPlayer().getSolidAreaDefaultY();
 		 eventRect[col][row].x = eventRect[col][row].eventRectDefaultX;
 		 eventRect[col][row].y = eventRect[col][row].eventRectDefaultY;
 		 
@@ -83,28 +83,28 @@ public class EventHandler {
 		 return hit;
 	}
 	public void teleport(int gameState) {
-		gp.gameState = gameState;
-		gp.player.worldX = gp.tileSize * 37;
-		gp.player.worldY = gp.tileSize * 10;
+		gp.setGameState(gameState);
+		gp.getPlayer().setWorldX(gp.getTileSize() * 37);
+		gp.getPlayer().setWorldY(gp.getTileSize() * 10);
 	}
 	public void damageSpike(int col, int row, int gameState) {
-		if(gp.player.invincible == false) {
-				if(gp.player.life > 1) gp.playSE(8);
+		if(!gp.getPlayer().isInvincible()) {
+				if(gp.getPlayer().getLife() > 1) gp.playSE(8);
 				else gp.playSE(10);
-			gp.gameState = gameState;
+			gp.setGameState(gameState);
 			//gp.ui.currentDialogue = "Take damage.";
-			gp.player.life --;
+			gp.getPlayer().decreaseLife(1);
 			//eventRect[col][row].eventDone = true;
-			gp.player.invincible = true;
+			gp.getPlayer().setInvincible(true);
 		}
 	}
 	public void healingPool(int col, int row, int gameState) {
-		if(gp.keyH.enterPressed == true) {
+		if(gp.getKeyH().isEnterPressed()) {
 			gp.playSE(15);
-			gp.gameState = gameState;
-			gp.ui.currentDialogue = "Drunk the water. Life and mana recovered.";
-			gp.player.life = gp.player.maxLife;
-			gp.player.mana = gp.player.maxMana;
+			gp.setGameState(gameState);
+			gp.getUi().setCurrentDialogue("Drunk the water. Life and mana recovered.");
+			gp.getPlayer().setLife(gp.getPlayer().getMaxLife());
+			gp.getPlayer().setMana(gp.getPlayer().getMaxMana());
 		}
 	}
 }

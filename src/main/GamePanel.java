@@ -8,52 +8,51 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import javax.swing.JPanel;
-import entity.Entity;
-import entity.Player;
+
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
 	// SCREEN SETTINGS
-	final int originalTileSize = 16; //16x16 tile
-	final int scale = 3;
-	public final int tileSize = originalTileSize * scale; //48x48 tile
+	private final int originalTileSize = 16; //16x16 tile
+	private final int scale = 3;
+	private final int tileSize = originalTileSize * scale; //48x48 tile
 	
-	public final int maxScreenCol = 18;
-	public final int maxScreenRow = 14;
-	public final int screenWidth = tileSize * maxScreenCol; //48x20 pixels
-	public final int screenHeight = tileSize * maxScreenRow; //48x15 pixels
+	private final int maxScreenCol = 18;
+	private final int maxScreenRow = 14;
+	private final int screenWidth = tileSize * maxScreenCol; //48x20 pixels
+	private final int screenHeight = tileSize * maxScreenRow; //48x15 pixels
 	
 	//WORLD SETTINGS
-	public final int maxWorldCol = 50;
-	public final int maxWorldRow = 50;
-	public final int worldWidth = tileSize * maxWorldCol;
-	public final int worldHeight = tileSize * maxWorldRow;
+	private final int maxWorldCol = 50;
+	private final int maxWorldRow = 50;
+	private final int worldWidth = tileSize * maxWorldCol;
+	private final int worldHeight = tileSize * maxWorldRow;
 	
 	//FPS
-	public int FPS = 60;
-	TileManager tileM = new TileManager(this, "/maps/worldV2.txt");
-	public KeyHandler keyH = new KeyHandler(this);
-	public Sound music = new Sound();
-	public Sound se = new Sound();
-	public CollisionChecker cChecker = new CollisionChecker(this);
-	public AssetSetter aSetter = new AssetSetter(this);
-	public UI ui = new UI(this);
-	public EventHandler eHandler = new EventHandler(this);
+	private int FPS = 60;
 	
 	//public Connect database = new Connect();
-	public Thread gameThread;
+	private Thread gameThread;
 	
 	//ENTITY AND OBJECT
-	public Player player = new Player(this, keyH);
-	public Entity obj[] = new Entity[10];
-	public Entity npc[] = new Entity[10];
-	public Entity monster[] = new Entity[20];
-	public ArrayList<Entity> projectileList = new ArrayList<>();
-	ArrayList<Entity> entityList = new ArrayList<>();
-	public boolean playThud = true;
+	private TileManager tileM = new TileManager(this, "/maps/worldV2.txt");
+	private KeyHandler keyH = new KeyHandler(this);
+	private Sound music = new Sound();
+	private Sound se = new Sound();
+	private CollisionChecker cChecker = new CollisionChecker(this);
+	private AssetSetter aSetter = new AssetSetter(this);
+	private UI ui = new UI(this);
+	private EventHandler eHandler = new EventHandler(this);
+	private Player player = new Player(this, keyH);
+	private Entity obj[] = new Entity[10];
+	private Entity npc[] = new Entity[10];
+	private Entity monster[] = new Entity[20];
+	private ArrayList<Entity> projectileList = new ArrayList<>();
+	private ArrayList<Entity> entityList = new ArrayList<>();
+	private boolean playThud = true;
 	
 	//GAME STATE
-	public int gameState;
+	private int gameState;
 	public final int titleState = 0;
 	public final int playState = 1;
 	public final int pauseState = 2;
@@ -61,8 +60,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int characterState = 4;
 	
 	
-	int spawnCooldown = 0;
-	public Thread gameThread2 = new Thread() {
+	private int spawnCooldown = 0;
+	/*public Thread gameThread2 = new Thread() {
 		public void run() {
 			double drawInterval = 1000000000/FPS; // 0.0166 seconds
 			double delta = 0;
@@ -101,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 				
 	}
-	};
+	};*/
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
@@ -109,6 +108,9 @@ public class GamePanel extends JPanel implements Runnable{
 		this.addKeyListener(keyH);
 		this.setFocusable(true);
 	}
+	
+
+	
 	
 	public void setupGame() {
 		
@@ -121,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
-		gameThread2.start();
+		//gameThread2.start();
 	}
 
 	@Override
@@ -168,13 +170,17 @@ public class GamePanel extends JPanel implements Runnable{
 			deltaTHUD += (currentTimeTHUD - lastTimeTHUD)/drawInterval;
 			lastTimeTHUD = currentTimeTHUD;
 			if(deltaTHUD >= 1000) deltaTHUD -= 900;
-			if(deltaTHUD >= 50 && player.thud == 1 && player.collisionOn == true) {
-				if(playThud == true) playSE(5);
-				player.thud = 0;
+			if(deltaTHUD >= 50 && player.getThud() == 1 && player.isCollisionOn()) {
+				if(playThud) playSE(5);
+				player.setThud(0);
 				deltaTHUD = 0;
 			}
 			if(delta >= 1) {
-			
+				spawnCooldown++;
+				if(spawnCooldown >= 2 * FPS && gameState == playState) {
+					aSetter.setRandomMonsters(5);
+					spawnCooldown = 0;
+				}
 			// 1. Update: Update information such as characters' positions
 			update();
 			// 2. Draw: Draw the screen with the updated information
@@ -186,6 +192,20 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	public void update() {
 		if(gameState == playState) {
+			if(player.getLife() <= 0) {
+				//game over
+				gameState = titleState;
+				stopMusic();
+				player.setCurrentWeapon(null);
+				player.setCurrentShield(null);
+				player.setDefaultValues();
+				player.getPlayerAttackImage();
+				player.setItems();
+				player.setInvincible(false);
+				aSetter.setNPC();
+				aSetter.setMonster();
+				aSetter.setObject();
+			}
 		//PLAYER
 			player.update();
 			
@@ -199,15 +219,15 @@ public class GamePanel extends JPanel implements Runnable{
 		//MONSTERS	
 			for(int i = 0; i < monster.length; ++i) {
 				if(monster[i] != null) {
-					if(monster[i].dead == true) {
-						monster[i].dyingCounter++;
-						if(monster[i].dyingCounter == 60) playSE(11);
-						if(monster[i].dyingCounter > 120) monster[i].alive = false;
+					if(monster[i].isDead()) {
+						monster[i].increaseDyingCounter(1);
+						if(monster[i].getDyingCounter() == 60) playSE(11);
+						if(monster[i].getDyingCounter() > 120) monster[i].setAlive(false);
 					}
-					if(monster[i].alive == true && monster[i].dead == false) monster[i].update();
-				if(monster[i].alive == false) {
-					player.exp += monster[i].exp;
-					ui.addMessage("Gained " + monster[i].exp + " Experience Points.");
+					if(monster[i].isAlive() && !monster[i].isDead()) monster[i].update();
+				if(!monster[i].isAlive()) {
+					player.setExp(player.getExp() + monster[i].getExp());
+					ui.addMessage("Gained " + monster[i].getExp() + " Experience Points.");
 					monster[i] = null;
 					spawnCooldown = 0;
 					player.checkLevelUp();
@@ -218,8 +238,8 @@ public class GamePanel extends JPanel implements Runnable{
 			//Projectiles
 			for(int i = 0; i< projectileList.size(); ++i)
 				if(projectileList.get(i) != null) {
-					if(projectileList.get(i).alive == true) projectileList.get(i).update();
-				if(projectileList.get(i).alive == false) {
+					if(projectileList.get(i).isAlive()) projectileList.get(i).update();
+				if(!projectileList.get(i).isAlive()) {
 					projectileList.remove(i);
 				}
 			}
@@ -261,7 +281,7 @@ public class GamePanel extends JPanel implements Runnable{
 			
 			@Override
 			public int compare(Entity e1, Entity e2) {
-				int result = Integer.compare(e1.worldY, e2.worldY);
+				int result = Integer.compare(e1.getWorldY(), e2.getWorldY());
 				return result;
 			}
 		});
@@ -291,5 +311,109 @@ public class GamePanel extends JPanel implements Runnable{
 	public void stopSE() {
 		se.stop();
 	}
+
+	
+	
+	
+	//Encapsulation
+	public int getTileSize() {
+		return tileSize;
+	}
+	public int getFPS() {
+		return FPS;
+	}
+	public boolean isPlayThud() {
+		return playThud;
+	}
+	public void changePlayThud(boolean playThud) {
+		this.playThud = playThud;
+	}
+	public int getGameState() {
+		return gameState;
+	}
+	public void setGameState(int gameState) {
+		this.gameState = gameState;
+	}
+	public int getMaxScreenCol() {
+		return maxScreenCol;
+	}
+	public int getMaxScreenRow() {
+		return maxScreenRow;
+	}
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+	public int getMaxWorldCol() {
+		return maxWorldCol;
+	}
+	public int getMaxWorldRow() {
+		return maxWorldRow;
+	}
+	public int getWorldWidth() {
+		return worldWidth;
+	}
+	public int getWorldHeight() {
+		return worldHeight;
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	public TileManager getTileM() {
+		return tileM;
+	}
+
+	public void setTileM(TileManager tileM) {
+		this.tileM = tileM;
+	}
+
+
+	public CollisionChecker getcChecker() {
+		return cChecker;
+	}
+
+
+	public AssetSetter getaSetter() {
+		return aSetter;
+	}
+
+	public UI getUi() {
+		return ui;
+	}
+
+	public EventHandler geteHandler() {
+		return eHandler;
+	}
+
+	public Entity[] getObj() {
+		return obj;
+	}
+
+	public Entity[] getNpc() {
+		return npc;
+	}
+
+	public Entity[] getMonster() {
+		return monster;
+	}
+
+	public ArrayList<Entity> getProjectileList() {
+		return projectileList;
+	}
+
+
+	public ArrayList<Entity> getEntityList() {
+		return entityList;
+	}
+
+	public KeyHandler getKeyH() {
+		return keyH;
+	}
+
+
+
+
 }
 

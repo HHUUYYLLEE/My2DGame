@@ -1,6 +1,6 @@
 package object;
 
-import entity.Entity;
+import main.Entity;
 import main.GamePanel;
 
 public class OBJ_Potion_Red extends Entity{
@@ -9,23 +9,23 @@ public class OBJ_Potion_Red extends Entity{
 	public OBJ_Potion_Red(GamePanel gp) {
 		super(gp);
 		this.gp = gp;
-		category = type_consumable;
-		name = "Red Potion";
-		moneyValue = 5;
-		down1 = setup("/objects/potion_red", gp.tileSize, gp.tileSize);
-		description = "Heals " + healingValue + " HP.";
+		setCategory(type_consumable);
+		setName("Red Potion");
+		setMoneyValue(5);
+		setDown1(setup("/objects/potion_red", gp.getTileSize(), gp.getTileSize()));
+		setDescription("Heals " + healingValue + " HP.");
 		
 	}
 	public void update() {
 		
 	}
 	public void use(Entity entity) {
-		gp.gameState = gp.dialogueState;
-		gp.ui.currentDialogue = "Drank the " + name + ".\nRecovered " + healingValue + " HP.";
-		entity.life += healingValue;
-		if(entity.life > entity.maxLife) entity.life = entity.maxLife;
-		gp.ui.slotCol = 0;
-		gp.ui.slotRow = 0;
+		gp.setGameState(gp.dialogueState);
+		gp.getUi().setCurrentDialogue("Drank the " + getName() + ".\nRecovered " + healingValue + " HP.");
+		entity.increaseLife(healingValue);
+		if(entity.getLife() > entity.getMaxLife()) entity.setLife(entity.getMaxLife());
+		gp.getUi().setSlotCol(0);
+		gp.getUi().setSlotRow(0);
 		gp.playSE(15);
 	}
 }

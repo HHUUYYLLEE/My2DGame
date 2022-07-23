@@ -1,48 +1,47 @@
 package object;
 
-import entity.Entity;
-import entity.Projectile;
+import main.Entity;
 import main.GamePanel;
+import main.Projectile;
 
 public class OBJ_Rock extends Projectile{
-	GamePanel gp;
+	private GamePanel gp;
 
 	public OBJ_Rock(GamePanel gp) {
 		super(gp);
 		this.gp = gp;
-		
-		name = "rock";
-		speed = 6;
-		maxLife = 80;
-		life = maxLife;
-		attack = 2;
-		useCost = 1;
-		alive = false;
-		getImage();
+		setName("rock");
+		setSpeed(6);
+		setMaxLife(80);
+		setLife(getMaxLife());
+		setAttack(2);
+		setUseCost(1);
+		setAlive(false);
+		getRockImage();
 	}
 	public boolean haveResources(Entity user) {
-		return user.ammo >= useCost;
+		return user.getAmmo() >= getUseCost();
 	}
 	public void subtractResources(Entity user) {
-		user.ammo -= useCost;
+		user.decreaseAmmo(getUseCost());
 	}
-	public void getImage() {
+	public void getRockImage() {
 	
-		up0 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		up1 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		up2 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		up3 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		down0 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		down1 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		down2 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		down3 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		left0 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		left1 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		left2 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		left3 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		right0 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		right1 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		right2 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
-		right3 = setup("/projectile/rockprojectile", gp.tileSize, gp.tileSize);
+		setUp0(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setUp1(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setUp2(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setUp3(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setDown0(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setDown1(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setDown2(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setDown3(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setLeft0(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setLeft1(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setLeft2(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setLeft3(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setRight0(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setRight1(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setRight2(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
+		setRight3(setup("/projectile/rockprojectile", gp.getTileSize(), gp.getTileSize()));
 }
 }

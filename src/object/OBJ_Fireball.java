@@ -3,9 +3,9 @@ package object;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import entity.Entity;
-import entity.Projectile;
+import main.Entity;
 import main.GamePanel;
+import main.Projectile;
 
 public class OBJ_Fireball extends Projectile{
 	GamePanel gp;
@@ -14,128 +14,128 @@ public class OBJ_Fireball extends Projectile{
 		super(gp);
 		this.gp = gp;
 		
-		name = "Fireball";
-		speed = 7;
-		maxLife = 80;
-		life = maxLife;
-		attack = 2;
-		useCost = 1;
-		alive = false;
-		getImage();
+		setName("Fireball");
+		setSpeed(7);
+		setMaxLife(80);
+		setLife(getMaxLife());
+		setAttack(2);
+		setUseCost(1);
+		setAlive(false);
+		getFireballImage();
 	}
-	public void getImage() {
-		cast1 = setup("/projectile/firecast1", gp.tileSize, gp.tileSize);
-		cast2 = setup("/projectile/firecast2", gp.tileSize, gp.tileSize);
-		cast3 = setup("/projectile/firecast3", gp.tileSize, gp.tileSize);
-		cast4 = setup("/projectile/firecast4", gp.tileSize, gp.tileSize);
-		cast5 = setup("/projectile/firecast5", gp.tileSize, gp.tileSize);
-		impact1 = setup("/projectile/fireimpact1", gp.tileSize, gp.tileSize);
-		impact2 = setup("/projectile/fireimpact2", gp.tileSize, gp.tileSize);
-		impact3 = setup("/projectile/fireimpact3", gp.tileSize, gp.tileSize);
-		up0 = setup("/projectile/firetravel1up", gp.tileSize, gp.tileSize);
-		up1 = setup("/projectile/firetravel2up", gp.tileSize, gp.tileSize);
-		up2 = setup("/projectile/firetravel3up", gp.tileSize, gp.tileSize);
-		up3 = setup("/projectile/firetravel4up", gp.tileSize, gp.tileSize);
-		up4 = setup("/projectile/firetravel5up", gp.tileSize, gp.tileSize);
-		up5 = setup("/projectile/firetravel6up", gp.tileSize, gp.tileSize);
-		up6 = setup("/projectile/firetravel7up", gp.tileSize, gp.tileSize);
-		up7 = setup("/projectile/firetravel8up", gp.tileSize, gp.tileSize);
-		down0 = setup("/projectile/firetravel1down", gp.tileSize, gp.tileSize);
-		down1 = setup("/projectile/firetravel2down", gp.tileSize, gp.tileSize);
-		down2 = setup("/projectile/firetravel3down", gp.tileSize, gp.tileSize);
-		down3 = setup("/projectile/firetravel4down", gp.tileSize, gp.tileSize);
-		down4 = setup("/projectile/firetravel5down", gp.tileSize, gp.tileSize);
-		down5 = setup("/projectile/firetravel6down", gp.tileSize, gp.tileSize);
-		down6 = setup("/projectile/firetravel7down", gp.tileSize, gp.tileSize);
-		down7 = setup("/projectile/firetravel8down", gp.tileSize, gp.tileSize);
-		left0 = setup("/projectile/firetravel1left", gp.tileSize, gp.tileSize);
-		left1 = setup("/projectile/firetravel2left", gp.tileSize, gp.tileSize);
-		left2 = setup("/projectile/firetravel3left", gp.tileSize, gp.tileSize);
-		left3 = setup("/projectile/firetravel4left", gp.tileSize, gp.tileSize);
-		left4 = setup("/projectile/firetravel5left", gp.tileSize, gp.tileSize);
-		left5 = setup("/projectile/firetravel6left", gp.tileSize, gp.tileSize);
-		left6 = setup("/projectile/firetravel7left", gp.tileSize, gp.tileSize);
-		left7 = setup("/projectile/firetravel8left", gp.tileSize, gp.tileSize);
-		right0 = setup("/projectile/firetravel1right", gp.tileSize, gp.tileSize);
-		right1 = setup("/projectile/firetravel2right", gp.tileSize, gp.tileSize);
-		right2 = setup("/projectile/firetravel3right", gp.tileSize, gp.tileSize);
-		right3 = setup("/projectile/firetravel4right", gp.tileSize, gp.tileSize);
-		right4 = setup("/projectile/firetravel5right", gp.tileSize, gp.tileSize);
-		right5 = setup("/projectile/firetravel6right", gp.tileSize, gp.tileSize);
-		right6 = setup("/projectile/firetravel7right", gp.tileSize, gp.tileSize);
-		right7 = setup("/projectile/firetravel8right", gp.tileSize, gp.tileSize);
+	public void getFireballImage() {
+		setCast1(setup("/projectile/firecast1", gp.getTileSize(), gp.getTileSize()));
+		setCast2(setup("/projectile/firecast2", gp.getTileSize(), gp.getTileSize()));
+		setCast3(setup("/projectile/firecast3", gp.getTileSize(), gp.getTileSize()));
+		setCast4(setup("/projectile/firecast4", gp.getTileSize(), gp.getTileSize()));
+		setCast5(setup("/projectile/firecast5", gp.getTileSize(), gp.getTileSize()));
+		setImpact1(setup("/projectile/fireimpact1", gp.getTileSize(), gp.getTileSize()));
+		setImpact2(setup("/projectile/fireimpact2", gp.getTileSize(), gp.getTileSize()));
+		setImpact3(setup("/projectile/fireimpact3", gp.getTileSize(), gp.getTileSize()));
+		setUp0(setup("/projectile/firetravel1up", gp.getTileSize(), gp.getTileSize()));
+		setUp1(setup("/projectile/firetravel2up", gp.getTileSize(), gp.getTileSize()));
+		setUp2(setup("/projectile/firetravel3up", gp.getTileSize(), gp.getTileSize()));
+		setUp3(setup("/projectile/firetravel4up", gp.getTileSize(), gp.getTileSize()));
+		setUp4(setup("/projectile/firetravel5up", gp.getTileSize(), gp.getTileSize()));
+		setUp5(setup("/projectile/firetravel6up", gp.getTileSize(), gp.getTileSize()));
+		setUp6(setup("/projectile/firetravel7up", gp.getTileSize(), gp.getTileSize()));
+		setUp7(setup("/projectile/firetravel8up", gp.getTileSize(), gp.getTileSize()));
+		setDown0(setup("/projectile/firetravel1down", gp.getTileSize(), gp.getTileSize()));
+		setDown1(setup("/projectile/firetravel2down", gp.getTileSize(), gp.getTileSize()));
+		setDown2(setup("/projectile/firetravel3down", gp.getTileSize(), gp.getTileSize()));
+		setDown3(setup("/projectile/firetravel4down", gp.getTileSize(), gp.getTileSize()));
+		setDown4(setup("/projectile/firetravel5down", gp.getTileSize(), gp.getTileSize()));
+		setDown5(setup("/projectile/firetravel6down", gp.getTileSize(), gp.getTileSize()));
+		setDown6(setup("/projectile/firetravel7down", gp.getTileSize(), gp.getTileSize()));
+		setDown7(setup("/projectile/firetravel8down", gp.getTileSize(), gp.getTileSize()));
+		setLeft0(setup("/projectile/firetravel1left", gp.getTileSize(), gp.getTileSize()));
+		setLeft1(setup("/projectile/firetravel2left", gp.getTileSize(), gp.getTileSize()));
+		setLeft2(setup("/projectile/firetravel3left", gp.getTileSize(), gp.getTileSize()));
+		setLeft3(setup("/projectile/firetravel4left", gp.getTileSize(), gp.getTileSize()));
+		setLeft4(setup("/projectile/firetravel5left", gp.getTileSize(), gp.getTileSize()));
+		setLeft5(setup("/projectile/firetravel6left", gp.getTileSize(), gp.getTileSize()));
+		setLeft6(setup("/projectile/firetravel7left", gp.getTileSize(), gp.getTileSize()));
+		setLeft7(setup("/projectile/firetravel8left", gp.getTileSize(), gp.getTileSize()));
+		setRight0(setup("/projectile/firetravel1right", gp.getTileSize(), gp.getTileSize()));
+		setRight1(setup("/projectile/firetravel2right", gp.getTileSize(), gp.getTileSize()));
+		setRight2(setup("/projectile/firetravel3right", gp.getTileSize(), gp.getTileSize()));
+		setRight3(setup("/projectile/firetravel4right", gp.getTileSize(), gp.getTileSize()));
+		setRight4(setup("/projectile/firetravel5right", gp.getTileSize(), gp.getTileSize()));
+		setRight5(setup("/projectile/firetravel6right", gp.getTileSize(), gp.getTileSize()));
+		setRight6(setup("/projectile/firetravel7right", gp.getTileSize(), gp.getTileSize()));
+		setRight7(setup("/projectile/firetravel8right", gp.getTileSize(), gp.getTileSize()));
 	}
 	public boolean haveResources(Entity user) {
-		return user.mana >= useCost;
+		return user.getMana() >= getUseCost();
 	}
 	public void subtractResources(Entity user) {
-		user.mana -= useCost;
+		user.decreaseMana(getUseCost());
 	}
 	public void update() {
-		if(user.casting == true) {
-			spriteCounter++;
-			if((spriteCounter + 1) % 4 == 0) {
-				if(spriteCastNum == 0) spriteCastNum = 1;
-				else if(spriteCastNum == 1) spriteCastNum = 2;
-				else if(spriteCastNum == 2) spriteCastNum = 3;
-				else if(spriteCastNum == 3) spriteCastNum = 4;
-				else spriteCastNum = 0;
+		if(getUser().isCasting()) {
+			setSpriteCounter(getSpriteCounter() + 1);
+			if((getSpriteCounter() + 1) % 4 == 0) {
+				if(getSpriteCastNum() == 0) setSpriteCastNum(1);
+				else if(getSpriteCastNum() == 1) setSpriteCastNum(2);
+				else if(getSpriteCastNum() == 2) setSpriteCastNum(3);
+				else if(getSpriteCastNum() == 3) setSpriteCastNum(4);
+				else setSpriteCastNum(0);
 			}
-			if(spriteCounter == 20) {
-				user.casting = false;
-				spriteCounter = 0;
+			if(getSpriteCounter() == 20) {
+				getUser().setCasting(false);
+				setSpriteCounter(0);
 			}
-		}else if(user.impact == false){
-		spriteCastNum = 0;
-		switch(direction) {
-		case "up": worldY -= speed; break;
-		case "down": worldY += speed; break;
-		case "left": worldX -= speed; break;
-		case "right": worldX += speed; break;
+		}else if(!getUser().isImpact()){
+		setSpriteCastNum(0);
+		switch(getDirection()) {
+		case "up": setWorldY(getWorldY() - getSpeed()); break;
+		case "down": setWorldY(getWorldY() + getSpeed()); break;
+		case "left": setWorldX(getWorldX() - getSpeed()); break;
+		case "right": setWorldX(getWorldX() + getSpeed()); break;
 		}
-		spriteCounter++;
-		if(spriteCounter > 7) {
-			if(spriteNum == 0) spriteNum = 1;
-			else if(spriteNum == 1) spriteNum = 2;
-			else if(spriteNum == 2) spriteNum = 3;
-			else if(spriteNum == 3) spriteNum = 4;
-			else if(spriteNum == 4) spriteNum = 5;
-			else if(spriteNum == 5) spriteNum = 6;
-			else if(spriteNum == 6) spriteNum = 7;
-			else if(spriteNum == 7) spriteNum = 0;
-			spriteCounter = 0;
+		setSpriteCounter(getSpriteCounter() + 1);
+		if(getSpriteCounter() > 7) {
+			if(getSpriteNum() == 0) setSpriteNum(1);
+			else if(getSpriteNum() == 1) setSpriteNum(2);
+			else if(getSpriteNum() == 2) setSpriteNum(3);
+			else if(getSpriteNum() == 3) setSpriteNum(4);
+			else if(getSpriteNum() == 4) setSpriteNum(5);
+			else if(getSpriteNum() == 5) setSpriteNum(6);
+			else if(getSpriteNum() == 6) setSpriteNum(7);
+			else if(getSpriteNum() == 7) setSpriteNum(0);
+			setSpriteCounter(0);
 		}
-		if(user == gp.player) {
-			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+		if(getUser() == gp.getPlayer()) {
+			int monsterIndex = gp.getcChecker().checkEntity(this, gp.getMonster());
 			if(monsterIndex != 999) {
-				user.impact = true;
-				gp.player.damageMonster(monsterIndex);
-				user.casting = false;
-				spriteCounter = 0;
+				getUser().setImpact(true);
+				gp.getPlayer().damageMonster(monsterIndex);
+				getUser().setCasting(false);
+				setSpriteCounter(0);
 			}
 		}else {
-			boolean contactPlayer = gp.cChecker.checkPlayer(this);
-			if(gp.player.invincible == false && contactPlayer == true) {
-				damagePlayer(attack);
-				alive = false;
+			boolean contactPlayer = gp.getcChecker().checkPlayer(this);
+			if(!gp.getPlayer().isInvincible()&& contactPlayer) {
+				damagePlayer(getAttack());
+				setAlive(false);
 			}
 		}
-		life--;
-		if(life <= 0) {
-			user.casting = false;
-			alive = false;
+		decreaseLife(1);
+		if(getLife() <= 0) {
+			getUser().setCasting(false);
+			setAlive(false);
 		}
 	}else {
-		spriteCounter++;
-		if(spriteCounter % 6 == 0) {
-		if(spriteImpactNum == 0) spriteImpactNum = 1;
-		else if(spriteImpactNum == 1) spriteImpactNum = 2;
-		else spriteImpactNum = 0;
-	}if(spriteCounter == 18) {
-		user.impact = false;
-		spriteCounter = 0;
-		alive = false;
-		casting = false;
+		setSpriteCounter(getSpriteCounter() + 1);
+		if(getSpriteCounter() % 6 == 0) {
+		if(getSpriteImpactNum() == 0) setSpriteImpactNum(1);
+		else if(getSpriteImpactNum() == 1) setSpriteImpactNum(2);
+		else setSpriteImpactNum(0);
+	}if(getSpriteCounter() == 18) {
+		getUser().setImpact(false);
+		setSpriteCounter(0);
+		setAlive(false);
+		setCasting(false);
 	}
 	}
 
@@ -144,68 +144,68 @@ public class OBJ_Fireball extends Projectile{
 
 		BufferedImage image = null;
 		int screenX, screenY;
-		screenX = worldX - gp.player.worldX + gp.player.x;
-		screenY = worldY - gp.player.worldY + gp.player.y;
+		screenX = getWorldX() - gp.getPlayer().getWorldX() + gp.getPlayer().getX();
+		screenY = getWorldY() - gp.getPlayer().getWorldY() + gp.getPlayer().getY();
 		//Improve rendering efficiency by not render out of screen stuff (or dying off screen)
-		if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
-		   worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-		   worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-		   worldY - gp.tileSize < gp.player.worldY + gp.player.screenY){
-		if(gp.player.casting == true) {
-			if(spriteCastNum == 0) image = cast1;
-			if(spriteCastNum == 1) image = cast2;
-			if(spriteCastNum == 2) image = cast3;
-			if(spriteCastNum == 3) image = cast4;
-			if(spriteCastNum == 4) image = cast5;
-		}else if(gp.player.impact == false) {
+		if(getWorldX() + gp.getTileSize() > gp.getPlayer().getWorldX() - gp.getPlayer().getScreenX() &&
+		   getWorldX() - gp.getTileSize() < gp.getPlayer().getWorldX() + gp.getPlayer().getScreenX() &&
+		   getWorldY() + gp.getTileSize() > gp.getPlayer().getWorldY() - gp.getPlayer().getScreenY() &&
+		   getWorldY() - gp.getTileSize() < gp.getPlayer().getWorldY() + gp.getPlayer().getScreenY()){
+		if(gp.getPlayer().isCasting()) {
+			if(getSpriteCastNum() == 0) image = getCast1();
+			if(getSpriteCastNum() == 1) image = getCast2();
+			if(getSpriteCastNum() == 2) image = getCast3();
+			if(getSpriteCastNum() == 3) image = getCast4();
+			if(getSpriteCastNum() == 4) image = getCast5();
+		}else if(!gp.getPlayer().isImpact()) {
 			
-			switch(direction) {
+			switch(getDirection()) {
 			
 			case "up":
-				if(spriteNum == 0) image = up0;
-				if(spriteNum == 1) image = up1;
-				if(spriteNum == 2) image = up2;
-				if(spriteNum == 3) image = up3;
-				if(spriteNum == 4) image = up4;
-				if(spriteNum == 5) image = up5;
-				if(spriteNum == 6) image = up6;
-				if(spriteNum == 7) image = up7;
+				if(getSpriteNum() == 0) image = getUp0();
+				if(getSpriteNum() == 1) image = getUp1();
+				if(getSpriteNum() == 2) image = getUp2();
+				if(getSpriteNum() == 3) image = getUp3();
+				if(getSpriteNum() == 4) image = getUp4();
+				if(getSpriteNum() == 5) image = getUp5();
+				if(getSpriteNum() == 6) image = getUp6();
+				if(getSpriteNum() == 7) image = getUp7();
 				break;
 			case "down":
-				if(spriteNum == 0) image = down0;
-				if(spriteNum == 1) image = down1;
-				if(spriteNum == 2) image = down2;
-				if(spriteNum == 3) image = down3;
-				if(spriteNum == 4) image = down4;
-				if(spriteNum == 5) image = down5;
-				if(spriteNum == 6) image = down6;
-				if(spriteNum == 7) image = down7;
+				if(getSpriteNum() == 0) image = getDown0();
+				if(getSpriteNum() == 1) image = getDown1();
+				if(getSpriteNum() == 2) image = getDown2();
+				if(getSpriteNum() == 3) image = getDown3();
+				if(getSpriteNum() == 4) image = getDown4();
+				if(getSpriteNum() == 5) image = getDown5();
+				if(getSpriteNum() == 6) image = getDown6();
+				if(getSpriteNum() == 7) image = getDown7();
 				break;
 			case "left":
-				if(spriteNum == 0) image = left0;
-				if(spriteNum == 1) image = left1;
-				if(spriteNum == 2) image = left2;
-				if(spriteNum == 3) image = left3;
-				if(spriteNum == 4) image = left4;
-				if(spriteNum == 5) image = left5;
-				if(spriteNum == 6) image = left6;
-				if(spriteNum == 7) image = left7;
+				if(getSpriteNum() == 0) image = getLeft0();
+				if(getSpriteNum() == 1) image = getLeft1();
+				if(getSpriteNum() == 2) image = getLeft2();
+				if(getSpriteNum() == 3) image = getLeft3();
+				if(getSpriteNum() == 4) image = getLeft4();
+				if(getSpriteNum() == 5) image = getLeft5();
+				if(getSpriteNum() == 6) image = getLeft6();
+				if(getSpriteNum() == 7) image = getLeft7();
 				break;
 			case "right":
-				if(spriteNum == 0) image = right0;
-				if(spriteNum == 1) image = right1;
-				if(spriteNum == 2) image = right2;
-				if(spriteNum == 3) image = right3;
-				if(spriteNum == 4) image = right4;
-				if(spriteNum == 5) image = right5;
-				if(spriteNum == 6) image = right6;
-				if(spriteNum == 7) image = right7;
+				if(getSpriteNum() == 0) image = getRight0();
+				if(getSpriteNum() == 1) image = getRight1();
+				if(getSpriteNum() == 2) image = getRight2();
+				if(getSpriteNum() == 3) image = getRight3();
+				if(getSpriteNum() == 4) image = getRight4();
+				if(getSpriteNum() == 5) image = getRight5();
+				if(getSpriteNum() == 6) image = getRight6();
+				if(getSpriteNum() == 7) image = getRight7();
 				break;
 			}
 	}else {
-		if(spriteImpactNum == 0) image = impact1;
-		else if(spriteImpactNum == 1) image = impact2;
-		else image = impact3;
+		if(getSpriteImpactNum() == 0) image = getImpact1();
+		else if(getSpriteImpactNum() == 1) image = getImpact2();
+		else image = getImpact3();
 		}
 	
 		g2.drawImage(image, screenX, screenY, null);

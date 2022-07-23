@@ -1,6 +1,6 @@
 package object;
 
-import entity.Entity;
+import main.Entity;
 import main.GamePanel;
 
 public class OBJ_Sword_Normal extends Entity{
@@ -8,12 +8,12 @@ public class OBJ_Sword_Normal extends Entity{
 	public OBJ_Sword_Normal(GamePanel gp) {
 		super(gp);
 		
-		name = "Normal Sword";
-		category = type_sword;
-		down1 = setup("/objects/sword_normal", gp.tileSize, gp.tileSize);
-		attackValue = 1;
-		description = "Mt 1\nA regular sword.";
-		attackArea.width = gp.tileSize * 6 / 8; //36
-		attackArea.height = gp.tileSize * 6 / 8;//36
+		setName("Normal Sword");
+		setCategory(type_sword);
+		setDown1(setup("/objects/sword_normal", gp.getTileSize(), gp.getTileSize()));
+		setAttackValue(1);
+		setDescription("Mt 1\nA regular sword.");
+		getAttackArea().width = gp.getTileSize() * 6 / 8; //36
+		getAttackArea().height = gp.getTileSize() * 6 / 8;//36
 	}
 }

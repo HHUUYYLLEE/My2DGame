@@ -2,22 +2,22 @@ package object;
 
 
 
-import entity.Entity;
+import main.Entity;
 import main.GamePanel;
 
 public class OBJ_Door extends Entity{
 	
 	public OBJ_Door(GamePanel gp) {
 		super(gp);
-		name = "Door";
-		down1 = setup("/objects/door", gp.tileSize, gp.tileSize);
-		collision = true;
+		setName("Door");
+		setDown1(setup("/objects/door", gp.getTileSize(), gp.getTileSize()));
+		setCollision(true);
 		
-		solidArea.x = 0;
-		solidArea.y = 16;
-		solidArea.width = 48;
-		solidArea.height = 32;
-		solidAreaDefaultX = solidArea.x;
-		solidAreaDefaultY = solidArea.y;
+		getSolidArea().x = 0;
+		getSolidArea().y = 16;
+		getSolidArea().width = 48;
+		getSolidArea().height = 32;
+		setSolidAreaDefaultX(getSolidArea().x);
+		setSolidAreaDefaultY(getSolidArea().y);
 	}
 }

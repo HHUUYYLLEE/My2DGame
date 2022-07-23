@@ -1,6 +1,6 @@
 package object;
 
-import entity.Entity;
+import main.Entity;
 import main.GamePanel;
 
 public class OBJ_ManaCrystal extends Entity{
@@ -9,9 +9,9 @@ public class OBJ_ManaCrystal extends Entity{
 		super(gp);
 		this.gp = gp;
 		
-		name = "Mana Crystal";
-		image = setup("/objects/manacrystal_full", gp.tileSize, gp.tileSize);
-		image2 = setup("/objects/manacrystal_blank", gp.tileSize, gp.tileSize);
+		setName("Mana Crystal");
+		setImage(setup("/objects/manacrystal_full", gp.getTileSize(), gp.getTileSize()));
+		setImage2(setup("/objects/manacrystal_blank", gp.getTileSize(), gp.getTileSize()));
 	}
 
 }

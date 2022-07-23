@@ -5,9 +5,9 @@ import java.awt.event.KeyListener;
 
 
 public class KeyHandler implements KeyListener{
-	GamePanel gp;
-	public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, attackPressed, magicKeyPressed;
-	int previousValue;
+	private GamePanel gp;
+	private boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, attackPressed, magicKeyPressed;
+	private int previousValue;
 	
 	public KeyHandler(GamePanel gp) {
 		this.gp = gp;
@@ -22,108 +22,109 @@ public class KeyHandler implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
 		//Title state inputs
-		if(gp.gameState == gp.titleState) titleState(code);
+		if(gp.getGameState() == gp.titleState) titleState(code);
 		//Play state inputs
-		else if(gp.gameState == gp.playState) playState(code);
+		else if(gp.getGameState() == gp.playState) playState(code);
 		//Pause state inputs
-		else if(gp.gameState == gp.pauseState) pauseState(code);
+		else if(gp.getGameState() == gp.pauseState) pauseState(code);
 		//Dialogue state inputs
-		else if(gp.gameState == gp.dialogueState) dialogueState(code);
+		else if(gp.getGameState() == gp.dialogueState) dialogueState(code);
 		//Character state inputs
-		else if(gp.gameState == gp.characterState) characterState(code);
+		else if(gp.getGameState() == gp.characterState) characterState(code);
 	}
 	public void titleState(int code) {
-		if(gp.ui.titleScreenState == 0) {
+		if(gp.getUi().getTitleScreenState() == 0) {
 			if(code == KeyEvent.VK_UP) {
-				gp.ui.commandNum--;
-				if(gp.ui.commandNum < 0) gp.ui.commandNum = 3;
+				gp.getUi().setCommandNum(gp.getUi().getCommandNum() - 1);
+				if(gp.getUi().getCommandNum() < 0) gp.getUi().setCommandNum(3);
 			}
 			if(code == KeyEvent.VK_DOWN) {
-				gp.ui.commandNum++;
-				if(gp.ui.commandNum > 3) gp.ui.commandNum = 0;
+				gp.getUi().setCommandNum(gp.getUi().getCommandNum() + 1);
+				if(gp.getUi().getCommandNum() > 3) gp.getUi().setCommandNum(0);
 			}
 			if(code == KeyEvent.VK_ENTER) {
-				if(gp.ui.commandNum == 0) {
-					gp.playMusic(0);
-					gp.gameState = gp.playState;
+				if(gp.getUi().getCommandNum() == 0) {
+					//gp.playMusic(0);
+					gp.setGameState(gp.playState);
 				}
-				if(gp.ui.commandNum == 1) {
+				if(gp.getUi().getCommandNum() == 1) {
 					
 				}
-				if(gp.ui.commandNum == 2) gp.ui.titleScreenState = 2;
-				if(gp.ui.commandNum == 3) System.exit(0);
+				if(gp.getUi().getCommandNum() == 2) gp.getUi().setTitleScreenState(2);
+				if(gp.getUi().getCommandNum() == 3) System.exit(0);
 			}
-		}else if(gp.ui.titleScreenState == 2 && code == KeyEvent.VK_ENTER) gp.ui.titleScreenState = 0;
+		}else if(gp.getUi().getTitleScreenState() == 2 && code == KeyEvent.VK_ENTER) gp.getUi().setTitleScreenState(0);
 	}
 	public void playState(int code) {
-		gp.playThud = true;
+		gp.changePlayThud(true);
 		if(code == KeyEvent.VK_W) upPressed = true;
 		if(code == KeyEvent.VK_S) downPressed = true;
 		if(code == KeyEvent.VK_A) leftPressed = true;
 		if(code == KeyEvent.VK_D) rightPressed = true;
-		if(code == KeyEvent.VK_P) gp.gameState = gp.pauseState;
+		if(code == KeyEvent.VK_P) gp.setGameState(gp.pauseState);
 		if(code == KeyEvent.VK_ENTER) enterPressed = true;
 		if(code == KeyEvent.VK_J) attackPressed = true;
-		if(code == KeyEvent.VK_K) gp.gameState = gp.characterState;
+		if(code == KeyEvent.VK_K) gp.setGameState(gp.characterState);
 		if(code == KeyEvent.VK_F) magicKeyPressed = true;
 		
 		//Debug when making new maps
 		//if(code == KeyEvent.VK_R) gp.tileM.loadMap("/maps/worldV2.txt");
 	}
 	public void pauseState(int code) {
-		gp.playThud = false;
+		gp.changePlayThud(false);
 		if(code == KeyEvent.VK_P) {
-			gp.gameState = gp.playState;
-			gp.playThud = true;
+			gp.setGameState(gp.playState);
+			gp.changePlayThud(true);
 		
 		}
 	}
 	public void dialogueState(int code) {
-		gp.playThud = false;
+		gp.changePlayThud(false);
 		if(code == KeyEvent.VK_ENTER) {
-			gp.gameState = gp.playState;
-			gp.playThud = true;
+			gp.setGameState(gp.playState);
+			gp.changePlayThud(true);
 		}
 	}
 	public void characterState(int code) {
-		gp.playThud = false;
+		gp.changePlayThud(false);
 		if(code == KeyEvent.VK_K) {
-			gp.gameState = gp.playState;
-			gp.playThud = true;
+			gp.setGameState(gp.playState);
+			gp.changePlayThud(true);
 		}
-		if(gp.player.inventory.size() > 0) {
+		if(gp.getPlayer().getInventory().size() > 0) {
 		if(code == KeyEvent.VK_W) {
-			previousValue = gp.ui.slotRow;
-			gp.ui.slotRow--;
-			if(gp.ui.slotRow < 0) gp.ui.slotRow = gp.ui.slotsInAColumn - 1;
-			while(gp.ui.slotRow * gp.ui.slotsInARow + gp.ui.slotCol + 1 > gp.player.inventory.size()) gp.ui.slotRow--;
-			if(gp.ui.slotRow == previousValue) gp.playSE(14);
+			previousValue = gp.getUi().getSlotRow();
+			gp.getUi().setSlotRow(gp.getUi().getSlotRow() - 1);
+			if(gp.getUi().getSlotRow() < 0) gp.getUi().setSlotRow(gp.getUi().getSlotsInAColumn() - 1);
+			while(gp.getUi().getSlotRow() * gp.getUi().getSlotsInARow() + gp.getUi().getSlotCol() + 1 > gp.getPlayer().getInventory().size()) 
+				gp.getUi().setSlotRow(gp.getUi().getSlotRow() - 1);
+			if(gp.getUi().getSlotRow() == previousValue) gp.playSE(14);
 			else gp.playSE(13);
 		}
 		if(code == KeyEvent.VK_S) {
-			previousValue = gp.ui.slotRow;
-			gp.ui.slotRow++;
-			if(gp.ui.slotRow > gp.ui.slotsInAColumn - 1 || gp.ui.slotRow * gp.ui.slotsInARow + gp.ui.slotCol + 1 > gp.player.inventory.size()) gp.ui.slotRow = 0;
-			if(gp.ui.slotRow == previousValue) gp.playSE(14);
+			previousValue = gp.getUi().getSlotRow();
+			gp.getUi().setSlotRow(gp.getUi().getSlotRow() + 1);
+			if(gp.getUi().getSlotRow() > gp.getUi().getSlotsInAColumn() - 1 || gp.getUi().getSlotRow() * gp.getUi().getSlotsInARow() + gp.getUi().getSlotCol() + 1 > gp.getPlayer().getInventory().size()) gp.getUi().setSlotRow(0);
+			if(gp.getUi().getSlotRow() == previousValue) gp.playSE(14);
 				else gp.playSE(13);
 		}
 		if(code == KeyEvent.VK_A) {
-			previousValue = gp.ui.slotCol;
-			gp.ui.slotCol--;
-			if(gp.ui.slotCol < 0) gp.ui.slotCol = gp.ui.slotsInARow - 1; 
-			while(gp.ui.slotRow * gp.ui.slotsInARow + gp.ui.slotCol + 1 > gp.player.inventory.size()) gp.ui.slotCol--;
-			if(gp.ui.slotCol == previousValue) gp.playSE(14);
+			previousValue = gp.getUi().getSlotCol();
+			gp.getUi().setSlotCol(gp.getUi().getSlotCol() - 1);
+			if(gp.getUi().getSlotCol() < 0) gp.getUi().setSlotCol(gp.getUi().getSlotsInARow() - 1); 
+			while(gp.getUi().getSlotRow() * gp.getUi().getSlotsInARow() + gp.getUi().getSlotCol() + 1 > gp.getPlayer().getInventory().size()) gp.getUi().setSlotCol(gp.getUi().getSlotCol() - 1);
+			if(gp.getUi().getSlotCol() == previousValue) gp.playSE(14);
 			else gp.playSE(13);
 		}
 		if(code == KeyEvent.VK_D) {
-			previousValue = gp.ui.slotCol;
-			gp.ui.slotCol++;
-			if(gp.ui.slotCol > gp.ui.slotsInARow - 1 || gp.ui.slotRow * gp.ui.slotsInARow + gp.ui.slotCol + 1 > gp.player.inventory.size()) gp.ui.slotCol = 0;
-			if(gp.ui.slotCol == previousValue) gp.playSE(14);
+			previousValue = gp.getUi().getSlotCol();
+			gp.getUi().setSlotCol(gp.getUi().getSlotCol() + 1);
+			if(gp.getUi().getSlotCol() > gp.getUi().getSlotsInARow() - 1 || gp.getUi().getSlotRow() * gp.getUi().getSlotsInARow() + gp.getUi().getSlotCol() + 1 > gp.getPlayer().getInventory().size()) gp.getUi().setSlotCol(0);
+			if(gp.getUi().getSlotCol() == previousValue) gp.playSE(14);
 			else gp.playSE(13);
 		}
 		} else if(code == KeyEvent.VK_W || code == KeyEvent.VK_S || code == KeyEvent.VK_A || code == KeyEvent.VK_D) gp.playSE(14);
-		if(code == KeyEvent.VK_ENTER) gp.player.selectItem();
+		if(code == KeyEvent.VK_ENTER) gp.getPlayer().selectItem();
 	
 	}
 	
@@ -136,6 +137,48 @@ public class KeyHandler implements KeyListener{
 		if(code == KeyEvent.VK_D) rightPressed = false;
 		if(code == KeyEvent.VK_J) attackPressed = false;
 		if(code == KeyEvent.VK_F) magicKeyPressed = false;
+	}
+	public boolean isUpPressed() {
+		return upPressed;
+	}
+	public void setUpPressed(boolean upPressed) {
+		this.upPressed = upPressed;
+	}
+	public boolean isDownPressed() {
+		return downPressed;
+	}
+	public void setDownPressed(boolean downPressed) {
+		this.downPressed = downPressed;
+	}
+	public boolean isLeftPressed() {
+		return leftPressed;
+	}
+	public void setLeftPressed(boolean leftPressed) {
+		this.leftPressed = leftPressed;
+	}
+	public boolean isRightPressed() {
+		return rightPressed;
+	}
+	public void setRightPressed(boolean rightPressed) {
+		this.rightPressed = rightPressed;
+	}
+	public boolean isEnterPressed() {
+		return enterPressed;
+	}
+	public void setEnterPressed(boolean enterPressed) {
+		this.enterPressed = enterPressed;
+	}
+	public boolean isAttackPressed() {
+		return attackPressed;
+	}
+	public void setAttackPressed(boolean attackPressed) {
+		this.attackPressed = attackPressed;
+	}
+	public boolean isMagicKeyPressed() {
+		return magicKeyPressed;
+	}
+	public void setMagicKeyPressed(boolean magicKeyPressed) {
+		this.magicKeyPressed = magicKeyPressed;
 	}
 
 }
